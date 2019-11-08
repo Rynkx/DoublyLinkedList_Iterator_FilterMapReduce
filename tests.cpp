@@ -44,6 +44,5 @@ TEST_CASE("merge"){
     y.push_back(5);
     auto merged = 
         merge<dl_iter<int>, int>(IteratorBounds<dl_iter<int>>(x.begin(), nullptr), IteratorBounds<dl_iter<int>>(y.begin(), nullptr));
-
     CHECK (reduce(map(merged, *[](const int& x)->int{return x%2;}), *[](const int& x, const int&y)->int{return x+y;}, 0) ==2);
 }
