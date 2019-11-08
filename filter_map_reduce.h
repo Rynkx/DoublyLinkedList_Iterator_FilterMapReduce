@@ -109,6 +109,7 @@ class MergeIterator{
     }
 };
 
+
 template <typename Iterator, typename T>
 IteratorBounds<FilterIterator<Iterator, T>> filter
 (IteratorBounds<Iterator> bounds, bool (*filter)(const T&)){
@@ -127,6 +128,13 @@ IteratorBounds<MapIterator<Iterator, T>> map
 }
 
 template<typename Iterator, typename T>
+IteratorBounds<MergeIterator<Iterator,T>> merge (IteratorBounds<Iterator> first, IteratorBounds<Iterator> second){
+    MergeIterator<Iterator, T> m_begin (first, second);
+    MergeIterator<Iterator, T> m_end (IteratorBounds<Iterator> (first.end, first.end), IteratorBounds<Iterator>(second.end, second.end));
+    return IteratorBounds<MergeIterator<Iterator, T>> (m_begin, m_end);
+}
+
+template<typename Iterator, typename T>
 T reduce(IteratorBounds<Iterator> bounds,
          T (*op)(const T& first, const T& second),
          T null_value){
@@ -134,11 +142,4 @@ T reduce(IteratorBounds<Iterator> bounds,
     for(auto i = bounds.begin; i != bounds.end; ++i)
         result = op(result, *i);
     return result;
-}
-
-template<typename Iterator, typename T>
-IteratorBounds<MergeIterator<Iterator,T>> merge (IteratorBounds<Iterator> first, IteratorBounds<Iterator> second){
-    MergeIterator<Iterator, T> m_begin (first, second);
-    MergeIterator<Iterator, T> m_end (IteratorBounds<Iterator> (first.end, first.end), IteratorBounds<Iterator>(second.end, second.end));
-    return IteratorBounds<MergeIterator<Iterator, T>> (m_begin, m_end);
 }
