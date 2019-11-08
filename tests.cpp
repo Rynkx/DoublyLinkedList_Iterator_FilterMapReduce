@@ -28,5 +28,8 @@ TEST_CASE("filtermapreduce"){
     stuff.push_back(10);
     stuff.push_back(3);
     std::clog << reduce(map(filter(IteratorBounds<dl_iter<int>, int>(stuff.begin(), nullptr),
-           is_odd), same), plus, 0);
+           is_odd), same), *[](const int& x, const int& y) -> int {return x+y;}, 0); 
+           //whether i make the arg *, no modifier or &, i need the * here, for some reason,
+           //maybe because a lambda is not a function pointer
 }
+//(int (*)(const int&, const int&))
