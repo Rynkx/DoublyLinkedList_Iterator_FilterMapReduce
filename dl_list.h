@@ -1,5 +1,8 @@
 #pragma once
 
+//Iterator needs to be friend to the class to access the node.
+//Class needs to be a friend of the iterator for some reason.
+//We put typename before accessing the struct inside the class for some reason
 
 template<typename T>
 class dl_iter;
@@ -36,15 +39,15 @@ public:
 template<typename T>
 class dl_iter{
 public:
-    friend class dl_list<T>; //Why?
-    dl_iter<T>(typename dl_list<T>::data_box* from); //Why?
+    friend class dl_list<T>; 
+    dl_iter<T>(typename dl_list<T>::data_box* from); 
     T& operator*();
     bool operator==(const dl_iter<T>& other) const;
     bool operator!=(const dl_iter<T>& other) const; 
     dl_iter<T>& operator++();
     dl_iter<T>& operator--(); 
 private:
-    typename dl_list<T>::data_box* curr; //Why?
+    typename dl_list<T>::data_box* curr; 
 };
 
 template<typename T>

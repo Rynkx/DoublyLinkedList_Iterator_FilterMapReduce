@@ -27,9 +27,23 @@ TEST_CASE("filtermapreduce"){
     stuff.push_back(8);
     stuff.push_back(10);
     stuff.push_back(3);
-    std::clog << reduce(map(filter(IteratorBounds<dl_iter<int>, int>(stuff.begin(), nullptr),
-           is_odd), same), *[](const int& x, const int& y) -> int {return x+y;}, 0); 
-           //whether i make the arg *, no modifier or &, i need the * here, for some reason,
-           //maybe because a lambda is not a function pointer
+    CHECK(reduce(map(filter(IteratorBounds<dl_iter<int>>(stuff.begin(), nullptr),
+                            *[](const int& x)->bool {return x%2;}), //filter by is_odd
+                        *[](const int& x)->int{return x*2;}), //map to *2
+                *[](const int& x, const int& y) -> int {return x+y;}, 0) //reduce right by sum
+                ==22);
+           //a lambda is not a function pointer, use * before it.
 }
-//(int (*)(const int&, const int&))
+
+TEST_CASE("merge"){
+    dl_list<int> x;
+    x.push_back(2);
+    x.push_back(4);
+    dl_list<int> y;
+    y.push_back(3);
+    y.push_back(5);
+    auto merged = 
+        merge<dl_iter<int>, int>(IteratorBounds<dl_iter<int>>(x.begin(), nullptr), IteratorBounds<dl_iter<int>>(y.begin(), nullptr));
+
+    CHECK (reduce(map(merged, *[](const int& x)->int{return x%2;}), *[](const int& x, const int&y)->int{return x+y;}, 0) ==2);
+}
